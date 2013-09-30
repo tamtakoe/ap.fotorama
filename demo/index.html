@@ -1,0 +1,86 @@
+<!doctype html>
+<html xmlns:ng="http://angularjs.org" xmlns:oi="https://github.com/tamtakoe" lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>My HTML File</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/fotorama/fotorama.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="lib/jquery/jquery-1.10.2.min.js"></script>
+    <script src="lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="lib/fotorama/fotorama.js"></script>
+    <script src="lib/angular_1_2/angular.min.js"></script>
+    <script src="lib/angular_1_2/angular-resource.min.js"></script>
+
+    <script src="js/ui.js"></script>
+    <script src="js/oi.list.js"></script>
+    <script src="js/oi.file.js"></script>
+    <script src="js/ap.fotorama.js"></script>
+    <script src="js/fotoramaApp.js"></script>
+
+</head>
+<body ng-app="fotoramaApp" ng-controller="MyCtrl">
+  <div class="row album">
+    <div class="span5">
+      <div class="form-horizontal">
+        <br/>
+        <div class="control-group"> <span class="control-label">Size:</span>               <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.width"/> &times; <input type="text" class="input-mini" ng-model="fotoramaoptions.height"/></div> </div>
+        <div class="control-group"> <span class="control-label">minSize:</span>            <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.minWidth"/> &times; <input type="text" class="input-mini" ng-model="fotoramaoptions.minHeight"/></div> </div>
+        <div class="control-group"> <span class="control-label">maxSize:</span>            <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.maxWidth"/> &times; <input type="text" class="input-mini" ng-model="fotoramaoptions.maxHeight"/></div> </div>
+        <div class="control-group"> <span class="control-label">ratio:</span>              <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.ratio"/></div> </div>
+        <div class="control-group"> <span class="control-label">nav:</span>                <div class="controls"><select class="input-small" ng-model="fotoramaoptions.nav" ng-options="c for c in ['dots','thumbs',false]"></select></div> </div>
+        <div class="control-group"> <span class="control-label">navPosition:</span>        <div class="controls"><select class="input-small" ng-model="fotoramaoptions.navPosition" ng-options="c for c in ['bottom','top']"></select></div> </div>
+        <div class="control-group"> <span class="control-label">thumb size:</span>         <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.thumbWidth"/> &times; <input type="text" class="input-mini" ng-model="fotoramaoptions.thumbHeight"/></div> </div>
+        <div class="control-group"> <span class="control-label">glimpse:</span>            <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.glimpse"/></div> </div>
+        <div class="control-group"> <span class="control-label">arrows:</span>             <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.arrows"></div> </div>
+        <div class="control-group"> <span class="control-label">click:</span>              <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.click"></div> </div>
+        <div class="control-group"> <span class="control-label">swipe:</span>              <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.swipe"></div> </div>
+        <div class="control-group"> <span class="control-label">allowFullScreen:</span>    <div class="controls"><select class="input-small" ng-model="fotoramaoptions.allowFullScreen" ng-options="c for c in [false,true,'native']"></select></div> </div>    
+        <div class="control-group"> <span class="control-label">fit:</span>                <div class="controls"><select class="input-small" ng-model="fotoramaoptions.fit" ng-options="c for c in ['contain','cover','scale-down','none']"></select></div> </div>
+        <div class="control-group"> <span class="control-label">transition:</span>         <div class="controls"><select class="input-small" ng-model="fotoramaoptions.transition" ng-options="c for c in ['slide','crossfade','dissolve']"></select></div> </div>
+        <div class="control-group"> <span class="control-label">transitionDuration:</span> <div class="controls"><input type="text" class="input-mini" ng-model="fotoramaoptions.transitionDuration"/></div> </div>
+        <div class="control-group"> <span class="control-label">hash:</span>               <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.hash"></div> </div>
+        <div class="control-group"> <span class="control-label">captions:</span>           <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.captions"></div> </div>
+        <div class="control-group"> <span class="control-label">autoplay:</span>           <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.autoplay"></div> </div>
+        <div class="control-group"> <span class="control-label">stopAutoplayOnTouch:</span><div class="controls"><input type="checkbox" ng-model="fotoramaoptions.stopAutoplayOnTouch"></div> </div>
+        <div class="control-group"> <span class="control-label">keyboard:</span>           <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.keyboard"></div> </div>
+        <div class="control-group"> <span class="control-label">loop:</span>               <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.loop"></div> </div>
+        <div class="control-group"> <span class="control-label">shuffle:</span>            <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.shuffle"></div> </div>
+        <div class="control-group"> <span class="control-label">shadows:</span>            <div class="controls"><input type="checkbox" ng-model="fotoramaoptions.shadows"></div> </div>
+      </div>
+    </div>
+    <div class="span7">
+        <div ap-fotorama="fotoramaoptions" ng-model="items" style="background-color: #ddd;"></div>
+        <div class="file-button-area">
+            <input type="file" class="file-input" multiple="multiple" oi-file="uploadoptions">
+        </div>
+        <div class="error-area">
+            <div class="alert alert-error" ng-show="errors.length">              
+                <button class="close" ng-click="errors.length=0">&times;</button>
+                <span ng-repeat="error in errors | unique">{{error.msg}}<br/></span>
+            </div>
+        </div>
+        <div ng-show="uploading.length">
+            <div class="progress">
+                <div class="bar" ng-style="{'width': uploading.progress+'%'}"></div>
+            </div>
+        </div>
+        <ul class="upload-area" oi-file="uploadoptions" ui-sortable="{stop: sort}" ng-class="dropClass" ng-model="items">
+            <li class="file-item"  ng-class="item.active ? 'active' : ''" ng-repeat="item in items">
+                <button type="button" class="close" ng-click="del(); item.$abort()">&times;</button>
+                <a href="" class="file-item-link" ng-click="setActive()" title="№ {{item.id}} <a href='{{item.original}}'>оригинал</a>">
+                  <img class="file-item-img" ng-src="{{item.thumb}}">
+                </a>
+                <div ng-show="item.uploading">
+                    <div class="progress">
+                        <div class="bar" ng-style="{'width': item.progress+'%'}"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        Можно перетаскивать на серую область
+    </div>
+  </div>
+</body>
+</html>
