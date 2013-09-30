@@ -1,17 +1,11 @@
-ap.fotorama — AngularJS [Fotorama](http://fotorama.io/) module
+ap.fotorama — AngularJS [Fotorama](http://fotorama.io/)
 =======
 
-☛ [Русская документация](https://github.com/tamtakoe/oi.file/wiki/%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B0%D1%8F-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F)
+☛ [Русская документация](https://github.com/tamtakoe/ap.fotorama/wiki/%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B0%D1%8F-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F)
 
-## Key features
+## Description
 
-* File selection from explorer/finder and by drag'n'drop
-* Validation
-* Image upload before posting to server (if browser supports FileReader)
-* Image upload via xhr and iframe (for older browsers)
-* Files data are embedded into a model, but can be read separately
-* Files are uploaded using POST method, each request per file
-* For AngularJS 1.2+, but there is `oi.file.old.js` for old versions
+Angular module for Fotorama jQuery plugin
 
 [Demo](http://tamtakoe.ru/uploader/fotorama.html), [sandbox](http://plnkr.co/edit/hHQfk4C9VlSigwrKcr4C?p=preview)
 
@@ -30,7 +24,12 @@ As a directive:
 Fotorama setup in controller:
 ```javascript
 $scope.items = [{img: 'iurl', thumb: 'turl', full: 'furl'}, {...}, ...]; //Model
-$scope.options = {width: '100%', height: 400, loop: true, keyboard: true, nav: 'thumbs'};
+$scope.options = {
+  width: '100%',
+  height: 400,
+  loop: true,
+  keyboard: true,
+  nav: 'thumbs'
 }
 ```
 
@@ -49,7 +48,7 @@ Default settings can be overridden in a service variable `apFotoramaConfig`
 - **margin** `{string}` - `2`
 - **glimpse** `{string}` - `0`
 
-// navigation, thumbs
+navigation, thumbs
 - **nav** `{string}` - `dots` ('thumbs' || false)
 - **navposition** `{string}` - `bottom` ('top')
 - **thumbwidth** `{string}` - `64`
@@ -76,6 +75,7 @@ Default settings can be overridden in a service variable `apFotoramaConfig`
 
 - **keyboard** `{string}` - `false`
 
+rewinding
 - **arrows** `{string}` - `true`
 - **click** `{string}` - `true`
 - **swipe** `{string}` - `true`
@@ -87,10 +87,12 @@ Default settings can be overridden in a service variable `apFotoramaConfig`
 
 - **shadows** `{string}` - `true`
 
-- **id** `{string}` - `id`      Имя поля с id картинки
-- **thumb** `{string}` - `thumb`  Имя поля с миниатюрой
-- **img** `{string}` - `image'   Имя поля с изображением
-- **full** `{string}` - `original` Имя поля с оригиналом
-- **caption** `{string}` - `caption` Имя поля с заголовком
-- **active** `{string}` - `active` Указатель активной фотки
-- **domain** `{string}` - `` Для кроссдоменных запросов ('http://domain.name')
+fields
+- **id** `{string}` - `id`      Name of image id field
+- **thumb** `{string}` - `thumb`  Name of thumb field
+- **img** `{string}` - `image'   Name of image field
+- **full** `{string}` - `original` Name of original field
+- **caption** `{string}` - `caption` Name of caption field
+- **active** `{string}` - `active` Name of active image index
+
+- **domain** `{string}` - `` For crossdomain requests ('http://domain.name')
