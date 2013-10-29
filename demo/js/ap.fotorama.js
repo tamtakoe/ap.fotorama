@@ -5,20 +5,33 @@ angular.module('ap.fotorama', [])
     .value('apFotoramaConfig',{
         //width:'100%', и проч. настройки по умолчанию
         //Имена полей в фотораме и приложении
-        id:      'id',    //имя поля с id картинки
-        thumb:   'thumb', //имя поля с миниатюрой
-        img:     'img',   //имя поля с изображением
-        full:    'full',  //имя поля с оригиналом
+        id:      'id',      //имя поля с id картинки
+        thumb:   'thumb',   //имя поля с миниатюрой
+        img:     'img',     //имя поля с изображением
+        full:    'full',    //имя поля с оригиналом
         caption: 'caption', //имя с заголовком
-        active:  'active', //указатель активной фотки
-        domain:  ''//'http://tamtakoe.ru/uploader/' //для кроссдоменных запросов
+        active:  'active',  //указатель активной фотки
+        domain:  '',        //'http://tamtakoe.ru/uploader/' //для кроссдоменных запросов
+        //Колбеки событий
+        show:            null,
+        showend:         null,
+        fullscreenenter: null,
+        fullscreenexit:  null,
+        loadvideo:       null,
+        unloadvideo:     null,
+        stagetap:        null,
+        ready:           null,
+        error:           null,
+        load:            null,
+        stopautoplay:    null,
+        startautoplay:   null
     })
     .directive('apFotorama', ['apFotoramaConfig', function (apFotoramaConfig) {
         return {
             require: '?ngModel',
             link: function (scope, element, attrs, ngModel) {
 
-                function combineCallbacks (first, second) {
+                /*function combineCallbacks (first, second) {
                     if (second && (typeof second === "function")) {
                         return function (e, ui) {
                             first(e, ui);
@@ -26,23 +39,53 @@ angular.module('ap.fotorama', [])
                         };
                     }
                     return first;
-                }
+                }*/
 
                 var opts = {}, collection;
 
                 angular.extend(opts, apFotoramaConfig);
 
-                element.bind('fotorama:load', function () {
-                    //console.log('load')
-                });
-                element.bind('fotorama:showend', function (e) {
-
+                element.bind('fotorama:showend', function (e, fotorama, extra) {
                     if (collection !== undefined && typeof scope[attrs.ngModel] === 'object') {
-                        //Записываем в модель активную фотку
+                        //Записываем активную фотку в модель 
                         setActive(collection.activeIndex);
 
                         scope.$$phase || scope.$apply(); //Не всегда срабатывает в первый раз, если бы не было начального переключения на фотку
                     }
+                    if (typeof opts.showend === 'function') opts.showend(e, extra);
+                });
+                element.bind('fotorama:show', function (e, fotorama, extra) {
+                    if (typeof opts.show === 'function') opts.show(e, extra)
+                });
+                element.bind('fotorama:load', function (e, fotorama, extra) {
+                    if (typeof opts.load === 'function') opts.load(e, extra);
+                });
+                element.bind('fotorama:fullscreenenter', function (e, fotorama, extra) {
+                    if (typeof opts.fullscreenenter === 'function') opts.fullscreenenter(e, extra);
+                });
+                element.bind('fotorama:fullscreenexit', function (e, fotorama, extra) {
+                    if (typeof opts.fullscreenexit === 'function') opts.fullscreenexit(e, extra);
+                });
+                element.bind('fotorama:loadvideo', function (e, fotorama, extra) {
+                    if (typeof opts.loadvideo === 'function') opts.loadvideo(e, extra);
+                });
+                element.bind('fotorama:unloadvideo', function (e, fotorama, extra) {
+                    if (typeof opts.unloadvideo === 'function') opts.unloadvideo(e, extra);
+                });
+                element.bind('fotorama:stagetap', function (e, fotorama, extra) {
+                    if (typeof opts.stagetap === 'function') opts.stagetap(e, extra);
+                });
+                element.bind('fotorama:ready', function (e, fotorama, extra) {
+                    if (typeof opts.ready === 'function') opts.ready(e, extra);
+                });
+                element.bind('fotorama:error', function (e, fotorama, extra) {
+                    if (typeof opts.error === 'function') opts.error(e, extra);
+                });
+                element.bind('fotorama:stopautoplay', function (e, fotorama, extra) {
+                    if (typeof opts.stopautoplay === 'function') opts.stopautoplay(e, extra);
+                });
+                element.bind('fotorama:startautoplay', function (e, fotorama, extra) {
+                    if (typeof opts.startautoplay === 'function') opts.startautoplay(e, extra);
                 });
                 
                 //Преобразование массивов данных в массивы, эквивалентные внутреннему массиву Фоторамы
