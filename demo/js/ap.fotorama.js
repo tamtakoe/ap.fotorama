@@ -31,63 +31,21 @@ angular.module('ap.fotorama', [])
             require: '?ngModel',
             link: function (scope, element, attrs, ngModel) {
 
-                /*function combineCallbacks (first, second) {
-                    if (second && (typeof second === "function")) {
-                        return function (e, ui) {
-                            first(e, ui);
-                            second(e, ui);
-                        };
-                    }
-                    return first;
-                }*/
-
-                var opts = {}, collection;
+                var opts = {},
+                    collection,
+                    events = 'show showend fullscreenenter fullscreenexit loadvideo unloadvideo stagetap ready error load stopautoplay startautoplay'.split(' ');
 
                 angular.extend(opts, apFotoramaConfig);
 
                 element.bind('fotorama:showend', function (e, fotorama, extra) {
                     if (collection !== undefined && typeof scope[attrs.ngModel] === 'object') {
-                        //Записываем активную фотку в модель 
+                        //Записываем активную фотку в модель
                         setActive(collection.activeIndex);
 
                         scope.$$phase || scope.$apply(); //Не всегда срабатывает в первый раз, если бы не было начального переключения на фотку
                     }
-                    if (typeof opts.showend === 'function') opts.showend(e, extra);
                 });
-                element.bind('fotorama:show', function (e, fotorama, extra) {
-                    if (typeof opts.show === 'function') opts.show(e, extra)
-                });
-                element.bind('fotorama:load', function (e, fotorama, extra) {
-                    if (typeof opts.load === 'function') opts.load(e, extra);
-                });
-                element.bind('fotorama:fullscreenenter', function (e, fotorama, extra) {
-                    if (typeof opts.fullscreenenter === 'function') opts.fullscreenenter(e, extra);
-                });
-                element.bind('fotorama:fullscreenexit', function (e, fotorama, extra) {
-                    if (typeof opts.fullscreenexit === 'function') opts.fullscreenexit(e, extra);
-                });
-                element.bind('fotorama:loadvideo', function (e, fotorama, extra) {
-                    if (typeof opts.loadvideo === 'function') opts.loadvideo(e, extra);
-                });
-                element.bind('fotorama:unloadvideo', function (e, fotorama, extra) {
-                    if (typeof opts.unloadvideo === 'function') opts.unloadvideo(e, extra);
-                });
-                element.bind('fotorama:stagetap', function (e, fotorama, extra) {
-                    if (typeof opts.stagetap === 'function') opts.stagetap(e, extra);
-                });
-                element.bind('fotorama:ready', function (e, fotorama, extra) {
-                    if (typeof opts.ready === 'function') opts.ready(e, extra);
-                });
-                element.bind('fotorama:error', function (e, fotorama, extra) {
-                    if (typeof opts.error === 'function') opts.error(e, extra);
-                });
-                element.bind('fotorama:stopautoplay', function (e, fotorama, extra) {
-                    if (typeof opts.stopautoplay === 'function') opts.stopautoplay(e, extra);
-                });
-                element.bind('fotorama:startautoplay', function (e, fotorama, extra) {
-                    if (typeof opts.startautoplay === 'function') opts.startautoplay(e, extra);
-                });
-                
+
                 //Преобразование массивов данных в массивы, эквивалентные внутреннему массиву Фоторамы
                 function makeFotoramaArray (res, update) {
                     var n = typeof res === 'object' ? res.length : 0,
@@ -124,63 +82,22 @@ angular.module('ap.fotorama', [])
                 scope.setActive = setActive;
 
                 scope.$watch(attrs.ngModel, function (newVal, oldVal) {
-
-                    /*var o = typeof oldVal === 'object' ? oldVal.length : 0,
-                        n = typeof newVal === 'object' ? newVal.length : 0,
-                        nArr = [], oArr = [], oKeys = {}, nKeys = {}, i, oi, ci, on, nn, activeIndex, oldActiveIndex;*/
                     
                     //Если модель изменилась, синхронизируем с ней Фотораму
                     if (oldVal !== newVal) {
                     
-                      var oKeys = {}, nKeys = {}, i, oi, temp;
+                        var oKeys = {}, nKeys = {}, i, oi, temp;
 
-                      /*temp = makeFotoramaArray(oldVal);
-                      var oArr           = temp.arr,
-                          o              = temp.arrLength,
-                          oldActiveIndex = temp.activeIndex;*/
-                          
-                      var oArr           = collection.data ? collection.data : [];
-                      var o              = oArr.length,
-                          oldActiveIndex = collection.activeIndex;   
-                          
-                      temp = makeFotoramaArray(newVal);
-                      var nArr        = temp.arr,
-                          n           = temp.arrLength,
-                          activeIndex = temp.activeIndex;
-                    
-                        //Преобразование массивов данных в массивы, эквивалентные внутреннему массиву Фоторамы
-                        /*for (i = 0, on = o; i < on; i++) {
-                            if (oldVal[i].id !== undefined) {
-                                ci = oArr.push({}) - 1;
-                                oArr[ci].id    = oldVal[i][opts.id];
-                                oArr[ci].thumb = opts.domain + oldVal[i][opts.thumb];
-                                oArr[ci].img   = oldVal[i][opts.img]  !== undefined ? opts.domain + oldVal[i][opts.img]  : oldVal[i][opts.thumb];
-                                oArr[ci].full  = oldVal[i][opts.full] !== undefined ? opts.domain + oldVal[i][opts.full] : oldVal[i][opts.thumb];
-                                
-                                if (oldVal[ci][opts.active]) oldActiveIndex = ci;
-                            } else {
-                                o--;
-                            }
-                        }
-                        for (i = 0, nn = n; i < nn; i++) {
-                            if (newVal[i].id !== undefined) {
-                                ci = nArr.push({}) - 1;
-                                nArr[ci].id    = newVal[i][opts.id];
-                                nArr[ci].thumb = opts.domain + newVal[i][opts.thumb];
-                                nArr[ci].img   = newVal[i][opts.img]  !== undefined ? opts.domain + newVal[i][opts.img]  : newVal[i][opts.thumb];
-                                nArr[ci].full  = newVal[i][opts.full] !== undefined ? opts.domain + newVal[i][opts.full] : newVal[i][opts.thumb];
-                                
-                                if (newVal[ci][opts.active]) activeIndex = ci;
-                            } else {
-                                n--;
-                            }
-                        }
-                        if (n && (!o || o && oArr[0].id === 'preloader')) {
-                            //Если фоток не было или была одна с прелоадером, то инициализируем фотораму заново и обновляем настройки, т.к. они сбрасываются
-                            collection.initialize(opts).load(nArr).setOptions(scope[attrs.uiFotorama])
-                            //console.log('load data')
-                            
-                        } else*/ if (o) {
+                        var oArr           = collection.data ? collection.data : [];
+                        var o              = oArr.length,
+                            oldActiveIndex = collection.activeIndex;
+
+                        temp = makeFotoramaArray(newVal);
+                        var nArr        = temp.arr,
+                            n           = temp.arrLength,
+                            activeIndex = temp.activeIndex;
+
+                        if (o) {
 
                             //Алгоритм преобразования массива фотографий в соответствии с моделью с минимальным количеством перестановок. http://plnkr.co/edit/clW0aVqzaisUkUo44EOL?p=preview
                             for (i = 0; i < o; i++) {
@@ -240,9 +157,6 @@ angular.module('ap.fotorama', [])
                             //Удаляем оставшиеся в конце элементы и меняем активную фотку, если она была удалена, на предыдущую
                             if (o > oi) collection.splice(n, o-(oi));
                             if (oldActiveIndex >= n && activeIndex === undefined) activeIndex = n-1;
-                            
-                            //Исправлено: Перезагружаем страницу, если удалены все фотки. Вынужденная мера, т.к. Фотораму после этого не запустить
-                            //if (!n) location.reload();
       
                         } else if (n) {
                             //Если фоток не было, то инициализируем фотораму заново и обновляем настройки, т.к. они сбрасываются
@@ -252,31 +166,29 @@ angular.module('ap.fotorama', [])
 
                         //Переключаемся на активную фотку
                         if (n) activeIndex !== undefined ? collection.show(activeIndex) : collection.show(0);
-                        /*if (n) {
-                          if (activeIndex !== undefined) {
-                            console.log(activeIndex, oldActiveIndex, n-1)
-                            if (oldActiveIndex == n-1 && activeIndex == 0) {
-                              collection.show(1+oldActiveIndex);
-                            }else{
-                              collection.show(activeIndex);
-                            }
-                            
-                          } else {
-                            collection.show(0);
-                          }
-                        }*/
                     }
                     
                 }, true);
 
+                //Смотрим изменение настроек
                 scope.$watch(attrs.apFotorama, function (newVal, oldVal) {
-                  angular.extend(opts, apFotoramaConfig, newVal);
-                  collection.setOptions(opts)
+                    angular.extend(opts, apFotoramaConfig, newVal);
+                    collection.setOptions(opts)
+
+                    //Устанавливаем события
+                    //TODO: Уничтожение старых событий
+                    angular.forEach(events, function (event) {
+                        if (typeof opts[event] === 'function') {
+                            element.bind('fotorama:' + event, function (e, fotorama, extra) {
+                                opts[event](e, extra);
+                            });
+                        }
+                    });
                   
-                  if (newVal.thumb || newVal.img || newVal.full) {      
-                      //Обновляем фотораму, если поменялись имена картинок
-                      makeFotoramaArray(scope[attrs.ngModel], true);
-                  }
+                    if (newVal.thumb || newVal.img || newVal.full) {
+                        //Обновляем фотораму, если поменялись имена картинок
+                        makeFotoramaArray(scope[attrs.ngModel], true);
+                    }
                     //collection.setOptions(newVal);
                 }, true);
 

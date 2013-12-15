@@ -16,7 +16,7 @@ angular.module('fotoramaApp', ['ngResource', 'oi.list', 'oi.file', 'ap.fotorama'
         
         oiList($scope, url, Files, {fields: {thumb: 'files_thumb/preloader.gif'}});
         
-        $scope.fotoramaoptions = {width: '100%', height: 400, loop: true, keyboard: true, nav: 'thumbs'};
+        $scope.fotoramaoptions = {width: '100%', height: 400, loop: true, keyboard: true, nav: 'thumbs', show: function () {console.log('show')}};
         
         $scope.uploadoptions = {
           change: function (file) {
