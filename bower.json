@@ -1,0 +1,19 @@
+{
+  "name": "ap.fotorama",
+  "main": "ap.fotorama.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/tamtakoe/ap.fotorama",
+  "authors": [
+    "tamtakoe@gmail.com"
+  ],
+  "description": "Angular module for Fotorama jQuery plugin",
+  "keywords": [
+    "fotorama",
+    "amgular",
+    "gallery"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "fotorama": "~4.5.1"
+  }
+}
